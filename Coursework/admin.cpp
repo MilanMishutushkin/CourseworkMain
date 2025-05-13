@@ -1,28 +1,59 @@
-#include "users.h" 
+#include "users.h"
 #include <iostream>
 #include <string>
+#include <conio.h>
+#include <windows.h>
 
 struct Admin : User {};
 
+void showAllUsers()
+{
+    printf("\n");
+    printf("\t%-20s\t%-15s\n", "Имя пользователя", "Пароль");
+    printf("**********************************************************\n");
+
+    for (const auto& user : users) {
+        printf(" \t%-20s\t%-15d\n", user.userName.c_str(), user.password);
+    }
+}
+
 void userManage() {
-    int choice;
+    int choice = 0;
 
     do {
-        std::cout << "\nWhat would you do?";
-        std::cout << "\n1. Add user";
-        std::cout << "\n2. Change user";
-        std::cout << "\n3. Delete user";
-        std::cout << "\n4. Exit\n";
-        std::cin >> choice;
+        
+        std::cout << "\n**********************************\n";
+        std::cout << "*        Главное меню               *\n";
+        std::cout << "*************************************\n";
+        std::cout << "* 1. Добавить пользователя          *\n";
+        std::cout << "* 2. Изменить пользователя          *\n";
+        std::cout << "* 3. Удалить пользователя           *\n";
+        std::cout << "* 4. Показать всех пользователей    *\n";
+        std::cout << "* 5. Выход                          *\n";
+        std::cout << "*************************************\n";
+
+        char key = _getch();
+        switch (key) {
+        case '1': choice = 1; break;
+        case '2': choice = 2; break;
+        case '3': choice = 3; break;
+        case '4': choice = 4; break;
+        default:
+            std::cout << "Ошибка: Введено неверное значение. Попробуйте снова.\n";
+            system("pause");
+            continue;
+        }
 
         switch (choice) {
         case 1:
+            system("cls");
             registration();
+            system("cls");
             break;
 
         case 2: {
             std::string nameToChange;
-            std::cout << "\nInput name of user to change: ";
+            std::cout << "\nВведите имя пользователя, которого хотите изменить: ";
             std::cin >> nameToChange;
 
             for (auto& user : users) {
@@ -30,27 +61,44 @@ void userManage() {
                     int subChoice;
 
                     do {
-                        std::cout << "\nWhat would you like to change?";
-                        std::cout << "\n1. Username";
-                        std::cout << "\n2. Password";
-                        std::cout << "\n3. Privileges";
-                        std::cout << "\n4. Balance name";
-                        std::cout << "\n5. Balance funds";
-                        std::cout << "\n6. Exit\n";
-                        std::cin >> subChoice;
+                        
+                        std::cout << "\n*********************************************************\n";
+                        std::cout << "*               Что Вы хотите изменить?                 *\n";
+                        std::cout << "*********************************************************\n";
+                        std::cout << "* 1. Имя пользователя                                   *\n";
+                        std::cout << "* 2. Пароль                                             *\n";
+                        std::cout << "* 3. Роль                                               *\n";
+                        std::cout << "* 4. Название баланса                                   *\n";
+                        std::cout << "* 5. Количество денег на балансе                        *\n";
+                        std::cout << "* 6. Выход                                              *\n";
+                        std::cout << "*********************************************************\n";
+
+                        char subKey = _getch();
+                        switch (subKey) {
+                        case '1': subChoice = 1; break;
+                        case '2': subChoice = 2; break;
+                        case '3': subChoice = 3; break;
+                        case '4': subChoice = 4; break;
+                        case '5': subChoice = 5; break;
+                        case '6': subChoice = 6; break;
+                        default:
+                            std::cout << "Ошибка: Введено неверное значение. Попробуйте снова.\n";
+                            system("pause");
+                            continue;
+                        }
 
                         switch (subChoice) {
                         case 1: {
+                            std::string newUsername;
                             bool userNameFlag = true;
                             while (userNameFlag) {
-                                std::cout << "\nNew username: ";
-                                std::string newUsername;
+                                std::cout << "\nНовое имя пользователя: ";
                                 std::cin >> newUsername;
-
                                 userNameFlag = false;
+
                                 for (const auto& existingUser : users) {
                                     if (existingUser.userName == newUsername) {
-                                        std::cout << "\nThis username is already taken.\n";
+                                        std::cout << "\n Это имя пользователя уже занято.\n";
                                         userNameFlag = true;
                                         break;
                                     }
@@ -66,7 +114,7 @@ void userManage() {
                         case 2: {
                             std::string newPassword;
                             do {
-                                std::cout << "\nNew password (min 5 characters): ";
+                                std::cout << "\nНовый пароль (минимум 5 символов): ";
                                 std::cin >> newPassword;
                             } while (newPassword.length() < 5);
 
@@ -77,7 +125,7 @@ void userManage() {
 
                         case 3: {
                             char adminInput;
-                            std::cout << "\nIs this user an admin? (y/n): ";
+                            std::cout << "\nЭтот пользователь администратор? (y/n): ";
                             std::cin >> adminInput;
                             user.isAdmin = (adminInput == 'y' || adminInput == 'Y');
                             user.printUserToFile(user.userName + ".txt");
@@ -85,48 +133,69 @@ void userManage() {
                         }
 
                         case 4: {
-                            std::string balanceName;
-                            std::cout << "\nInput name of balance to change: ";
-                            std::cin >> balanceName;
+                            if (user.balances.empty()) {
+                                std::cout << "\n====================================\n";
+                                std::cout << "У пользователя нет балансов!\n";
+                                std::cout << "====================================\n";
+                                break;
+                            }
 
-                                for (auto& balance : user.balances) {
-                                    if (balance.name == balanceName) {
-                                        std::cout << "\nNew balance name: ";
-                                        std::cin >> balance.name;
-                                        break;
-                                    }
+                            std::string balanceName;
+                            std::cout << "\nВведите название баланса для изменений: ";
+                            std::cin >> balanceName;
+                            bool found = false;
+
+                            for (auto& balance : user.balances) {
+                                if (balance.name == balanceName) {
+                                    std::cout << "\nНазвание нового баланса: ";
+                                    std::cin >> balance.name;
+                                    found = true;
+                                    break;
                                 }
+                            }
+
+                            if (!found) {
+                                std::cout << "\n=====================================\n";
+                                std::cout << "Баланс с таким именем не найден!\n";
+                                std::cout << "=====================================\n";
+                            }
+
                             user.printUserToFile(user.userName + ".txt");
                             break;
                         }
 
                         case 5: {
+                            if (user.balances.empty()) {
+                                std::cout << "\n====================================\n";
+                                std::cout << "У пользователя нет балансов!\n";
+                                std::cout << "====================================\n";
+                                break;
+                            }
+
                             std::string balanceName;
-                            std::cout << "\nInput name of balance to change: ";
+                            std::cout << "\nВведите название баланса для изменений: ";
                             std::cin >> balanceName;
 
                             for (auto& balance : user.balances) {
                                 if (balance.name == balanceName) {
-                                    std::cout << "\nNew balance funds: ";
+                                    std::cout << "\nВведите новое количество денег на балансе: ";
                                     std::cin >> balance.funds;
                                     break;
                                 }
                             }
+
                             user.printUserToFile(user.userName + ".txt");
                             break;
                         }
 
                         case 6:
-                            std::cout << "Returning to main menu...\n";
+                            std::cout << "Возвращение в главное меню...\n";
                             break;
-
-                        default:
-                            std::cout << "Invalid input!\n";
                         }
 
                     } while (subChoice != 6);
 
-                    break; // выход из цикла for, пользователь найден
+                    break;
                 }
             }
             break;
@@ -134,26 +203,31 @@ void userManage() {
 
         case 3: {
             std::string nameToDelete;
-            std::cout << "\nInput name of user to delete: ";
+            std::cout << "\nВведите имя пользователя, которого хотите удалить: ";
             std::cin >> nameToDelete;
+            std::string choiceToDelete;
+            std::cout << "\nВы уверены, что хотите удалить пользователя " << nameToDelete << "? (Да/Нет): ";
+            std::cin >> choiceToDelete;
 
-            for (size_t i = 0; i < users.size(); ++i) {
-                if (users[i].userName == nameToDelete) {
-                    users.erase(users.begin() + i);
-                    std::cout << "User deleted.\n";
-                    break;
-                }
+            if (choiceToDelete == "Да" || choiceToDelete == "да" || choiceToDelete == "yes" || choiceToDelete == "Yes" || choiceToDelete == "y") {
+                users.erase(std::remove_if(users.begin(), users.end(),
+                    [&](const User& u) { return u.userName == nameToDelete; }),
+                    users.end());
+                std::cout << "Пользователь удален.\n";
+            }
+            else {
+                std::cout << "Операция отменена.\n";
             }
             break;
         }
 
         case 4:
-            std::cout << "Exiting admin panel...\n";
+            showAllUsers();
             break;
-
-        default:
-            std::cout << "Invalid choice.\n";
+        case 5:
+            std::cout << "Выход из панели администратора...\n";
+            break;
         }
 
-    } while (choice != 4);
+    } while (choice != 5);
 }

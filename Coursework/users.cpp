@@ -5,10 +5,50 @@
 #include <random>
 #include "users.h"
 
+void User::printUserToFile(const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "\n============================================\n";
+        std::cerr << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
+        std::cout << "\n============================================\n";
+        return;
+    }
+    file << userName << "\t"
+        << password << "\t"
+        << isAdmin << std::endl;
+    for (const auto& balance : balances) {
+        file << balance.name << "\t"
+            << balance.number << "\t"
+            << balance.funds << std::endl;
+    }
+    file.close();
+}
+
+void User::readUserFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    Balance balance;
+    if (!file.is_open()) {
+        std::cout << "\n============================================\n";
+        std::cerr << "  Ошибка:Не удалось открыть файл для чтения!" << std::endl;
+        std::cout << "\n============================================\n";
+        return;
+    }
+    file >> userName >> password >> isAdmin;
+    while (file >> balance.name >> balance.number >> balance.funds) {
+        balances.push_back(balance);
+    }
+    file.close();
+}
+
+std::vector<User> users;
+int userIndex = -1;
+
 void loadUsers() {
     std::ifstream file("user_list.txt");
     if (!file.is_open()) {
-        std::cerr << "\n[Error] Unable to open user list file.\n";
+        std::cout << "\n=============================================================\n";
+        std::cout << "   Ошибка:Не удалось открыть файл пользователей для чтения!";
+        std::cout << "\n=============================================================\n";
         return;
     }
 
@@ -24,7 +64,9 @@ void loadUsers() {
 void saveUserList() {
     std::ofstream file("user_list.txt");
     if (!file.is_open()) {
-        std::cerr << "\n[Error] Unable to open user list file for writing.\n";
+        std::cout << "\n=============================================================\n";
+        std::cout << "   Ошибка:Не удалось открыть файл пользователей для чтения!";
+        std::cout << "\n=============================================================\n";
         return;
     }
 
@@ -39,13 +81,15 @@ void registration() {
     bool userNameFlag = true;
 
     while (userNameFlag) {
-        std::cout << "\nNew username: ";
+        std::cout << "\nИмя пользователя: ";
         std::cin >> user.userName;
 
         userNameFlag = false;
         for (const auto& existingUser : users) {
             if (user.userName == existingUser.userName) {
-                std::cout << "\n[!] Username already taken. Try again.\n";
+                std::cout << "\n==============================================\n";
+                std::cout << "      Ошибка:Такое имя пользователя уже занято!";
+                std::cout << "\n==============================================\n";
                 userNameFlag = true;
                 break;
             }
@@ -54,11 +98,13 @@ void registration() {
 
     bool passwordFlag = true;
     while (passwordFlag) {
-        std::cout << "New password (min 5 chars): ";
+        std::cout << "Новый пароль(минимум 5 символов): ";
         std::cin >> user.password;
 
         if (user.password.length() < 5) {
-            std::cout << "\n[!] Password too short.\n";
+            std::cout << "\n==============================================\n";
+            std::cout << "      Ошибка:Пароль слишком короткий";
+            std::cout << "\n==============================================\n";
         }
         else {
             passwordFlag = false;
@@ -66,38 +112,45 @@ void registration() {
     }
 
     char adminInput;
-    std::cout << "Is this user an admin? (y/n): ";
+    std::cout << "Этот пользователь администратор? (y/n): ";
     std::cin >> adminInput;
     user.isAdmin = (adminInput == 'y' || adminInput == 'Y');
 
     users.push_back(user);
     user.printUserToFile(user.userName + ".txt");
     saveUserList();
-
-    std::cout << "\n[+] Registration completed!\n";
+    std::cout << "\n----------------------------------------\n";
+    std::cout << "      Регистрация успешно завершена!";
+    std::cout << "\n----------------------------------------\n";
 }
 
 void login() {
     while (true) {
         std::string userName, password;
-        std::cout << "\nUsername: ";
+        std::cout << "\nИмя пользователя: ";
         std::cin >> userName;
 
-        std::cout << "Password: ";
+        std::cout << "Пароль: ";
         std::cin >> password;
 
         for (int i = 0; i < users.size(); ++i) {
             if (users[i].userName == userName && users[i].password == password) {
                 userIndex = i;
-                std::cout << "\n[+] Welcome, " << userName << "!";
+                system("cls");
+                std::cout << "\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                std::cout << "      Приветствуем, " << userName << "!";
+                std::cout << "\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                 if (users[i].isAdmin) {
-                    std::cout << "\n[Admin Access Granted]\n";
+                    std::cout << "\n ----------------------------------------------------\n";
+                    std::cout << "          Пользователь является администратором   ";
+                    std::cout << "\n ----------------------------------------------------\n";
                 }
                 return;
             }
         }
-
-        std::cout << "\n[!] Invalid username or password. Try again.\n";
+        std::cout << "\n===================================\n";
+        std::cout << "   Ошибка:Неверный логин или пароль!";
+        std::cout << "\n===================================\n";
         userIndex = -1;
     }
 }
@@ -112,17 +165,20 @@ bool isNameUnique(const std::string& name) {
 }
 
 void balanceCreate() {
+    system("cls");
     if (userIndex == -1) {
-        std::cout << "\n[!] Please log in first.\n";
+        std::cout << "\nПожалуйста,сначала войдите  в аккаунт.\n";
         return;
     }
 
-    std::cout << "\nEnter new balance name: ";
+    std::cout << "\nВведите название нового баланса: ";
     std::string name;
     std::cin >> name;
 
     if (!isNameUnique(name)) {
-        std::cout << "\n[!] Balance name already exists.\n";
+        std::cout << "\n=================================================\n";
+        std::cout << "   Ошибка:Баланс с таким названием уже существует!";
+        std::cout << "\n=================================================\n";
         return;
     }
 
@@ -135,37 +191,46 @@ void balanceCreate() {
     users[userIndex].balances.push_back(newBalance);
     users[userIndex].printUserToFile(users[userIndex].userName + ".txt");
 
-    std::cout << "\n[+] Balance created successfully:\n";
-    std::cout << "Name: " << newBalance.name << "\n";
-    std::cout << "Number: " << newBalance.number << "\n";
-    std::cout << "Funds: " << newBalance.funds << "\n";
+    printf("\n");
+    std::cout << "\n       Баланс успешно создан:                    \n";
+    printf("\t%-20s\t%-15s\t%-15s\n", "Название", "Номер", "Средства");
+    printf("**********************************************************\n");
+    printf("\t%-20s\t%-15d\t%-15d\n", newBalance.name.c_str(), newBalance.number, newBalance.funds);
+
+
+
 }
 
 void showAllBalances() {
+    system("cls");
     if (userIndex == -1) {
-        std::cout << "\n[!] Please log in first.\n";
+        std::cout << "\nПожалуйста, сначала войдите в аккаунт.\n";
         return;
     }
     if (users[userIndex].balances.empty()) {
-        std::cout << "\n[!] You don't have any balances.\n";
+        std::cout << "\nУ вас нет ни одного баланса.\n";
         return;
     }
-        std::cout << "\n[Your Balances]:\n";
+
+    printf("\n");
+    printf("\t%-20s\t%-15s\t%-15s\n", "Название", "Номер", "Средства");
+    printf("**********************************************************\n");
+
     for (const auto& balance : users[userIndex].balances) {
-        std::cout << "\n-----------------------------\n";
-        std::cout << "Name: " << balance.name << "\n";
-        std::cout << "Number: " << balance.number << "\n";
-        std::cout << "Funds: " << balance.funds << "\n";
+        printf(" \t%-20s\t%-15d\t%-15d\n", balance.name.c_str(), balance.number, balance.funds);
     }
+
+    printf("\n");
 }
 
 void balanceFill() {
+    system("cls");
     if (userIndex == -1) {
-        std::cout << "\n[!] Please log in first.\n";
+        std::cout << "\nПожалуйста, сначала войдите в аккаунт.\n";
         return;
     }
 
-    std::cout << "\nEnter balance name to fill: ";
+    std::cout << "\nВведите название баланса для пополнения: ";
     std::string inputName;
     std::cin >> inputName;
 
@@ -178,19 +243,23 @@ void balanceFill() {
     }
 
     if (balanceIndex == -1) {
-        std::cout << "\n[!] Balance not found.\n";
+        std::cout << "\n=================================================\n";
+        std::cout << "      Ошибка:Баланс с таким именем не найден!";
+        std::cout << "\n=================================================\n";
         return;
     }
 
     int inputFunds;
     while (true) {
-        std::cout << "Enter amount to add: ";
+        std::cout << "Количество: ";
         std::cin >> inputFunds;
 
         if (std::cin.fail() || std::cin.peek() != '\n') {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "\n[!] Invalid input. Enter a number.\n";
+            std::cout << "\n=================================================\n";
+            std::cout << "              Ошибка:Неверное значение!";
+            std::cout << "\n=================================================\n";
         }
         else {
             break;
@@ -200,5 +269,7 @@ void balanceFill() {
     users[userIndex].balances[balanceIndex].funds += inputFunds;
     users[userIndex].printUserToFile(users[userIndex].userName + ".txt");
 
-    std::cout << "\n[+] Balance updated successfully.\n";
+    std::cout << "\n----------------------------------------\n";
+    std::cout << "          Баланс успешно обновлен!";
+    std::cout << "\n----------------------------------------\n";
 }

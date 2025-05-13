@@ -133,6 +133,7 @@
     <ClCompile Include="users.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="admin.h" />
     <ClInclude Include="users.h" />
     <ClInclude Include="menu.h" />
   </ItemGroup>
