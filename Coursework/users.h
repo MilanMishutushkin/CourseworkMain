@@ -34,3 +34,4 @@ bool isNameUnique(const std::string& name);
 void balanceCreate();
 void showAllBalances();
 void balanceFill();
+std::string caesarCipher(const std::string& text);

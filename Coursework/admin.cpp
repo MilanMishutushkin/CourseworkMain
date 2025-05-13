@@ -9,8 +9,8 @@ struct Admin : User {};
 void showAllUsers()
 {
     printf("\n");
-    printf("\t%-16s\t%-6s\n", "Имя пользователя", "Пароль");
-    printf("**********************************************************\n");
+    printf("\t%-16s\t%-10s\n", "Имя пользователя", "Зашифрованный пароль");
+    printf("*************************************************************\n");
 
     printUsersData("users.txt");
 }
@@ -120,6 +120,7 @@ void userManage() {
                             } while (newPassword.length() < 5);
 
                             user.password = newPassword;
+                            user.password = caesarCipher(user.password);
                             user.printUserToFile(user.userName + ".txt");
                             break;
                         }

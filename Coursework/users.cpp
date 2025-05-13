@@ -116,6 +116,20 @@ void printUsersData(const std::string& filename)
 	}
 }
 
+std::string caesarCipher(const std::string& text) {
+	std::string encryptedText;
+	for (char c : text) {
+		encryptedText += static_cast<char>(c - 15);
+	}
+	return encryptedText;
+}
+std::string caesarDecipher(const std::string& text) {
+	std::string decryptedText;
+	for (char c : text) {
+		decryptedText += static_cast<char>(c + 15);
+	}
+	return decryptedText;
+}
 void registration() {
 	User user;
 	bool userNameFlag = true;
@@ -140,6 +154,7 @@ void registration() {
 	while (passwordFlag) {
 		std::cout << "Новый пароль(минимум 5 символов): ";
 		std::cin >> user.password;
+		user.password = caesarCipher(user.password);
 
 		if (user.password.length() < 5) {
 			std::cout << "\n==============================================\n";
@@ -175,7 +190,7 @@ void login() {
 		std::cin >> password;
 
 		for (int i = 0; i < users.size(); ++i) {
-			if (users[i].userName == userName && users[i].password == password) {
+			if (users[i].userName == userName && caesarDecipher(users[i].password) == password) {
 				userIndex = i;
 				system("cls");
 				std::cout << "\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
