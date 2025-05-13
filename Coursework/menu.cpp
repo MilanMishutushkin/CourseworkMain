@@ -26,6 +26,7 @@ void runMenu() {
             if (users[userIndex].isAdmin)
             {
                 userManage();
+                break;
             }
             else
             {
@@ -34,7 +35,7 @@ void runMenu() {
                     std::cout << "\n******************************************";
                     std::cout << "\n*             Главное меню               *";
                     std::cout << "\n******************************************";
-                    std::cout << "\n* 1. Создать новый баланск               *";
+                    std::cout << "\n* 1. Создать новый баланс                *";
                     std::cout << "\n* 2. Показать информацию о всех балансах *";
                     std::cout << "\n* 3. Пополнить баланс                    *";
                     std::cout << "\n* 4. Выйти                               *";
@@ -64,7 +65,8 @@ void runMenu() {
                         balanceFill();
                         break;
                     case 4:
-                        std::cout << "Выход...\n";
+                        std::cout << "\nВыход...\n";
+                        system("cls");
                         break;
                     default:
                         std::cout << "\n====================================================\n";
@@ -94,7 +96,7 @@ void runMenu() {
                     std::cout << "\n* 2. Показать информацию о всех балансах *";
                     std::cout << "\n* 3. Пополнить баланс                    *";
                     std::cout << "\n* 4. Выйти                               *";
-                    std::cout << "\n******************************************";
+                    std::cout << "\n******************************************\n";
                     char key = _getch();
                     switch (key) {
                     case '1': subChoice = 1; break;
@@ -121,6 +123,7 @@ void runMenu() {
                         break;
                     case 4:
                         std::cout << "\nВыход...\n";
+                        system("cls");
                         break;
                     default:
                         std::cout << "\n====================================================\n";

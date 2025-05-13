@@ -9,12 +9,10 @@ struct Admin : User {};
 void showAllUsers()
 {
     printf("\n");
-    printf("\t%-20s\t%-15s\n", "Имя пользователя", "Пароль");
+    printf("\t%-16s\t%-6s\n", "Имя пользователя", "Пароль");
     printf("**********************************************************\n");
 
-    for (const auto& user : users) {
-        printf(" \t%-20s\t%-15d\n", user.userName.c_str(), user.password);
-    }
+    printUsersData("users.txt");
 }
 
 void userManage() {
@@ -22,7 +20,7 @@ void userManage() {
 
     do {
         
-        std::cout << "\n**********************************\n";
+        std::cout << "\n*************************************\n";
         std::cout << "*        Главное меню               *\n";
         std::cout << "*************************************\n";
         std::cout << "* 1. Добавить пользователя          *\n";
@@ -38,6 +36,7 @@ void userManage() {
         case '2': choice = 2; break;
         case '3': choice = 3; break;
         case '4': choice = 4; break;
+        case '5': choice = 5; break;
         default:
             std::cout << "Ошибка: Введено неверное значение. Попробуйте снова.\n";
             system("pause");
@@ -61,7 +60,7 @@ void userManage() {
                     int subChoice;
 
                     do {
-                        
+                        system("cls");
                         std::cout << "\n*********************************************************\n";
                         std::cout << "*               Что Вы хотите изменить?                 *\n";
                         std::cout << "*********************************************************\n";
@@ -89,6 +88,7 @@ void userManage() {
 
                         switch (subChoice) {
                         case 1: {
+                            system("cls");
                             std::string newUsername;
                             bool userNameFlag = true;
                             while (userNameFlag) {
@@ -114,6 +114,7 @@ void userManage() {
                         case 2: {
                             std::string newPassword;
                             do {
+                                system("cls");
                                 std::cout << "\nНовый пароль (минимум 5 символов): ";
                                 std::cin >> newPassword;
                             } while (newPassword.length() < 5);
@@ -124,6 +125,7 @@ void userManage() {
                         }
 
                         case 3: {
+                            system("cls");
                             char adminInput;
                             std::cout << "\nЭтот пользователь администратор? (y/n): ";
                             std::cin >> adminInput;
@@ -133,6 +135,7 @@ void userManage() {
                         }
 
                         case 4: {
+                            system("cls");
                             if (user.balances.empty()) {
                                 std::cout << "\n====================================\n";
                                 std::cout << "У пользователя нет балансов!\n";
@@ -154,6 +157,7 @@ void userManage() {
                                 }
                             }
 
+                                system("cls");
                             if (!found) {
                                 std::cout << "\n=====================================\n";
                                 std::cout << "Баланс с таким именем не найден!\n";
@@ -165,6 +169,7 @@ void userManage() {
                         }
 
                         case 5: {
+                            system("cls");
                             if (user.balances.empty()) {
                                 std::cout << "\n====================================\n";
                                 std::cout << "У пользователя нет балансов!\n";
@@ -202,6 +207,7 @@ void userManage() {
         }
 
         case 3: {
+            system("cls");
             std::string nameToDelete;
             std::cout << "\nВведите имя пользователя, которого хотите удалить: ";
             std::cin >> nameToDelete;
@@ -214,6 +220,7 @@ void userManage() {
                     [&](const User& u) { return u.userName == nameToDelete; }),
                     users.end());
                 std::cout << "Пользователь удален.\n";
+                saveUsersData(users, "users.txt");
             }
             else {
                 std::cout << "Операция отменена.\n";
@@ -222,10 +229,12 @@ void userManage() {
         }
 
         case 4:
+            system("cls");
             showAllUsers();
             break;
         case 5:
             std::cout << "Выход из панели администратора...\n";
+            system("cls");
             break;
         }
 
