@@ -38,7 +38,8 @@ void runMenu() {
                     std::cout << "\n* 1. Создать новый баланс                *";
                     std::cout << "\n* 2. Показать информацию о всех балансах *";
                     std::cout << "\n* 3. Пополнить баланс                    *";
-                    std::cout << "\n* 4. Выйти                               *";
+                    std::cout << "\n* 4. Переводы между балансами            *";
+                    std::cout << "\n* 5. Выйти                               *";
                     std::cout << "\n******************************************";
                     char key = _getch();
                     switch (key) {
@@ -46,6 +47,7 @@ void runMenu() {
                     case '2': subChoice = 2; break;
                     case '3': subChoice = 3; break;
                     case '4': subChoice = 4; break;
+                    case '5': subChoice = 5; break;
                     default:
                         std::cout << "\n====================================================\n";
                         std::cout << " Ошибка: Введено неверное значение. Попробуйте снова!";
@@ -56,15 +58,22 @@ void runMenu() {
 
                     switch (subChoice) {
                     case 1:
+                        system("cls");
                         balanceCreate();
                         break;
                     case 2:
+                        system("cls");
                         showAllBalances();
                         break;
                     case 3:
+                        system("cls");
                         balanceFill();
                         break;
                     case 4:
+                        system("cls");
+                        transactions();
+                        break;
+                    case 5:
                         std::cout << "\nВыход...\n";
                         system("cls");
                         break;
@@ -73,7 +82,7 @@ void runMenu() {
                         std::cout << " Ошибка: Введено неверное значение. Попробуйте снова!";
                         std::cout << "\n====================================================\n";
                     }
-                } while (subChoice != 4);
+                } while (subChoice != 5);
 
                 break;
             }

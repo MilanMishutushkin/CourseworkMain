@@ -11,7 +11,7 @@ void User::printUserToFile(const std::string& filename) {
 	std::ofstream file(filename);
 	if (!file.is_open()) {
 		std::cout << "\n============================================\n";
-		std::cerr << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
+		std::cout << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
 		std::cout << "\n============================================\n";
 		return;
 	}
@@ -31,7 +31,7 @@ void User::readUserFromFile(const std::string& filename) {
 	Balance balance;
 	if (!file.is_open()) {
 		std::cout << "\n============================================\n";
-		std::cerr << "  Ошибка:Не удалось открыть файл для чтения!" << std::endl;
+		std::cout << "  Ошибка:Не удалось открыть файл для чтения!" << std::endl;
 		std::cout << "\n============================================\n";
 		return;
 	}
@@ -80,17 +80,16 @@ void saveUserList() {
 
 void saveUsersData(const std::vector<User>& users, const std::string& filename)
 {
-	std::ofstream file(filename);
+	std::ofstream file(filename, std::ios::app); 
 	if (!file.is_open()) {
 		std::cout << "\n============================================\n";
-		std::cerr << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
+		std::cout << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
 		std::cout << "\n============================================\n";
 		return;
 	}
 
-	for (const auto& user : users) {
-		file << user.userName << '\t' << user.password << '\n';
-	}
+	const User& user = users.back();
+	file << user.userName << '\t' << user.password << '\n';
 
 	file.close();
 }
@@ -100,7 +99,7 @@ void printUsersData(const std::string& filename)
 	std::ifstream file(filename);
 	if (!file.is_open()) {
 		std::cout << "\n============================================\n";
-		std::cerr << "  Ошибка:Не удалось открыть файл для записи!" << std::endl;
+		std::cout << "  Ошибка:Не удалось открыть файл для записи!";
 		std::cout << "\n============================================\n";
 		return;
 	}
@@ -122,6 +121,64 @@ std::string caesarCipher(const std::string& text) {
 		encryptedText += static_cast<char>(c - 15);
 	}
 	return encryptedText;
+}
+void transactions()
+{
+	std::cout << "\nВведите название баланса-отправителя:";
+	std::string balanceOutcomer;
+	std::cin >> balanceOutcomer;
+
+	int outcomerIndex = -1;
+	for (size_t i = 0; i < users[userIndex].balances.size(); ++i) {
+		if (users[userIndex].balances[i].name == balanceOutcomer) {
+			outcomerIndex = i;
+			break;
+		}
+	}
+
+	if (outcomerIndex == -1) {
+		std::cout << "\n============================================\n";
+		std::cout << "  Ошибка: Баланс-отправитель не найден!";
+		std::cout << "\n============================================\n";
+		return;
+	}
+
+	std::cout << "Введите название баланса-получателя:";
+	std::string balanceIncomer;
+	std::cin >> balanceIncomer;
+
+	int incomerIndex = -1;
+	for (size_t i = 0; i < users[userIndex].balances.size(); ++i) {
+		if (users[userIndex].balances[i].name == balanceIncomer) {
+			incomerIndex = i;
+			break;
+		}
+	}
+
+	if (incomerIndex == -1) {
+		std::cout << "\n============================================\n";
+		std::cout << "  Ошибка: Баланс-получатель не найден!";
+		std::cout << "\n============================================\n";
+		return;
+	}
+
+	std::cout << "Сумма перевода: ";
+	int transaction;
+	std::cin >> transaction;
+
+	if (transaction > users[userIndex].balances[outcomerIndex].funds) {
+		std::cout << "\n============================================\n";
+		std::cout << "  Ошибка: Недостаточно средств!";
+		std::cout << "\n============================================\n";
+		return;
+	}
+
+	users[userIndex].balances[outcomerIndex].funds -= transaction;
+	users[userIndex].balances[incomerIndex].funds += transaction;
+
+	std::cout << "\n----------------------------------------\n";
+	std::cout << "          Перевод успешно выполнен!";
+	std::cout << "\n----------------------------------------\n";
 }
 std::string caesarDecipher(const std::string& text) {
 	std::string decryptedText;

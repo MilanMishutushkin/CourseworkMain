@@ -35,3 +35,4 @@ void balanceCreate();
 void showAllBalances();
 void balanceFill();
 std::string caesarCipher(const std::string& text);
+void transactions();
