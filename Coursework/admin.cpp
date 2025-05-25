@@ -3,6 +3,7 @@
 #include <string>
 #include <conio.h>
 #include <windows.h>
+#include "admin.h"
 
 struct Admin : User {};
 
@@ -141,6 +142,7 @@ void userManage() {
                                 std::cout << "\n====================================\n";
                                 std::cout << "У пользователя нет балансов!\n";
                                 std::cout << "====================================\n";
+                                system("pause");
                                 break;
                             }
 
@@ -163,6 +165,7 @@ void userManage() {
                                 std::cout << "\n=====================================\n";
                                 std::cout << "Баланс с таким именем не найден!\n";
                                 std::cout << "=====================================\n";
+                                system("pause");
                             }
 
                             user.printUserToFile(user.userName + ".txt");
@@ -170,11 +173,13 @@ void userManage() {
                         }
 
                         case 5: {
-                            system("cls");
+                            system("cls");  
                             if (user.balances.empty()) {
                                 std::cout << "\n====================================\n";
                                 std::cout << "У пользователя нет балансов!\n";
                                 std::cout << "====================================\n";
+                                system("pause");
+                                system("pause");
                                 break;
                             }
 
@@ -196,6 +201,8 @@ void userManage() {
 
                         case 6:
                             std::cout << "Возвращение в главное меню...\n";
+                            system("pause");
+                            system("cls");
                             break;
                         }
 
@@ -212,19 +219,35 @@ void userManage() {
             std::string nameToDelete;
             std::cout << "\nВведите имя пользователя, которого хотите удалить: ";
             std::cin >> nameToDelete;
-            std::string choiceToDelete;
-            std::cout << "\nВы уверены, что хотите удалить пользователя " << nameToDelete << "? (Да/Нет): ";
-            std::cin >> choiceToDelete;
-
-            if (choiceToDelete == "Да" || choiceToDelete == "да" || choiceToDelete == "yes" || choiceToDelete == "Yes" || choiceToDelete == "y") {
-                users.erase(std::remove_if(users.begin(), users.end(),
-                    [&](const User& u) { return u.userName == nameToDelete; }),
-                    users.end());
-                std::cout << "Пользователь удален.\n";
-                saveUsersData(users, "users.txt");
+            bool found = false;
+            for (auto user : users)
+            {
+                if (user.userName == nameToDelete) {
+                    found = true;
+                    break;
+                }
             }
-            else {
-                std::cout << "Операция отменена.\n";
+            if (!found) {
+                std::cout << "Пользователь не найден.\n";
+                
+            }
+            else
+            {
+                std::string choiceToDelete;
+                std::cout << "\nВы уверены, что хотите удалить пользователя " << nameToDelete << "? (Да/Нет): ";
+                std::cin >> choiceToDelete;
+                auto it = std::find_if(users.begin(), users.end(), [&](const User& user) {
+                    return user.userName == nameToDelete;
+                    });
+
+                if (it != users.end()) {
+                    users.erase(it);
+                    std::cout << "Пользователь удален.\n";
+                    saveUsersData(users, "users.txt");
+                }
+                else {
+                    std::cout << "Пользователь не найден.\n";
+                }
             }
             break;
         }
@@ -235,9 +258,15 @@ void userManage() {
             break;
         case 5:
             std::cout << "Выход из панели администратора...\n";
+            system("pause");
             system("cls");
             break;
         }
 
     } while (choice != 5);
+}
+
+void sorrtUsers()
+{
+    
 }

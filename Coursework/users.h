@@ -14,7 +14,7 @@ struct Balance {
 struct User {
 	std::string userName = " ";
 	std::string password = " ";
-	bool isAdmin;
+	bool isAdmin = 0;
 	std::vector<Balance> balances;
 
 	void printUserToFile(const std::string& filename);
@@ -36,3 +36,4 @@ void showAllBalances();
 void balanceFill();
 std::string caesarCipher(const std::string& text);
 void transactions();
+void sortBalances();
