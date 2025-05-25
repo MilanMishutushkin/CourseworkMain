@@ -1,3 +1,3 @@
 #pragma once
 void userManage();
-void sorrtUsers();
+void sortUsers();

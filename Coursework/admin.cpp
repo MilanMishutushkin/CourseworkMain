@@ -1,272 +1,383 @@
-#include "users.h"
+Ôªø#include "users.h"
 #include <iostream>
 #include <string>
 #include <conio.h>
 #include <windows.h>
 #include "admin.h"
+#include <stdio.h>
+#include <fstream>
 
 struct Admin : User {};
 
+
+
+
+
+
+//–¢–´ –û–¢–°–û–†–¢–ò–†–û–í–ê–õ –¢–û–õ–¨–ö–û –í–ï–ö–¢–û–†, –ù–ê–î–û –ï–©–ï –ï–ì–û –í –ü–†–ê–í–ò–õ–¨–ù–û–ô –§–û–†–ú–ï –ù–ê–ü–ò–°–ê–¢–¨ –í –§–ê–ô–õ!!!!!!!!!!!!!
+
+
+
+
+
+
+
+
+
+void sortUsers()
+{
+	int choice = 0;
+
+	do {
+		system("cls");
+		std::cout << "\n*********************************************************\n";
+		std::cout << "*               –ü–∞—Ä–∞–º–µ—Ç—Ä –¥–ª—è —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫–∏ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–µ–π   *\n";
+		std::cout << "*********************************************************\n";
+		std::cout << "* 1. –ò–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è (–ê-–Ø)                             *\n";
+		std::cout << "* 2. –†–æ–ª—å (–∞–¥–º–∏–Ω–∏—Å—Ç—Ä–∞—Ç–æ—Ä—ã –≤–≤–µ—Ä—Ö—É)                       *\n";
+		std::cout << "* 3. –û–±—â–∏–π –±–∞–ª–∞–Ω—Å (–ø–æ –≤–æ–∑—Ä–∞—Å—Ç–∞–Ω–∏—é)                      *\n";
+		std::cout << "* 4. –í—ã—Ö–æ–¥                                              *\n";
+		std::cout << "*********************************************************\n";
+
+		char key = _getch();
+		switch (key) {
+		case '1': choice = 1; break;
+		case '2': choice = 2; break;
+		case '3': choice = 3; break;
+		case '4': choice = 4; break;
+		default:
+			std::cout << "–û—à–∏–±–∫–∞: –í–≤–µ–¥–µ–Ω–æ –Ω–µ–≤–µ—Ä–Ω–æ–µ –∑–Ω–∞—á–µ–Ω–∏–µ. –ü–æ–ø—Ä–æ–±—É–π—Ç–µ —Å–Ω–æ–≤–∞.\n";
+			system("pause");
+			continue;
+		}
+
+		switch (choice) {
+		case 1: 
+			for (int i = 0; i < users.size(); i++) {
+				for (int j = 0; j < users.size() - i - 1; j++) {
+					if (users[j].userName > users[j + 1].userName) {
+						std::swap(users[j], users[j + 1]);
+					}
+				}
+			}
+			std::cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–∏ –æ—Ç—Å–æ—Ä—Ç–∏—Ä–æ–≤–∞–Ω—ã –ø–æ –∏–º–µ–Ω–∏.\n";
+			break;
+
+		case 2: 
+			for (int i = 0; i < users.size(); i++) {
+				for (int j = 0; j < users.size() - i - 1; j++) {
+					if (users[j].isAdmin < users[j + 1].isAdmin) {
+						std::swap(users[j], users[j + 1]);
+					}
+				}
+			}
+			std::cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–∏ –æ—Ç—Å–æ—Ä—Ç–∏—Ä–æ–≤–∞–Ω—ã –ø–æ —Ä–æ–ª–∏.\n";
+			break;
+
+		case 3: 
+			for (int i = 0; i < users.size(); i++) {
+				for (int j = 0; j < users.size() - i - 1; j++) {
+					if (users[j].allFunds() > users[j + 1].allFunds()) {
+						std::swap(users[j], users[j + 1]);
+					}
+				}
+			}
+			std::cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–∏ –æ—Ç—Å–æ—Ä—Ç–∏—Ä–æ–≤–∞–Ω—ã –ø–æ –±–∞–ª–∞–Ω—Å—É.\n";
+			break;
+
+		case 4:
+			std::cout << "–í—ã—Ö–æ–¥ –∏–∑ –º–µ–Ω—é —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫–∏...\n";
+			break;
+		}
+
+		if (choice != 4) {
+			system("pause");
+		}
+
+	} while (choice != 4);
+}void deleteUser()
+{
+	std::cout << "\n–í–≤–µ–¥–∏—Ç–µ –∏–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–∞ —É–¥–∞–ª–µ–Ω–∏–µ:";
+	std::string nameToDelete;
+	std::cin >> nameToDelete;
+	bool found = false;
+	for (auto user : users)
+	{
+		if (user.userName == nameToDelete)
+		{
+			found = true;
+			break;
+		}
+	}
+	if (found)
+	{
+		std::string confirm;
+		std::cout << "\n–í—ã –¥–µ–π—Å—Ç–≤–∏—Ç–µ–ª—å–Ω–æ —Ö–æ—Ç–∏—Ç–µ —É–¥–∞–ª–∏—Ç—å –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è " << nameToDelete << " ?";
+		std::cin >> confirm;
+		if (confirm == "Yes" || confirm == "yes" || confirm == "–î–∞" || confirm == "–¥–∞")
+		{
+			int index = 0;
+			remove((nameToDelete + ".txt").c_str());
+
+			for (auto user : users)
+			{
+				if (user.userName == nameToDelete)
+				{
+					users.erase(users.begin() + index);
+				}
+				index++;
+			}
+
+
+			std::ofstream file("users.txt", std::ios::trunc);
+
+			for (const auto& user : users)
+			{
+				file << user.userName << "\t" << user.password << "\n";
+			}
+			file.close();
+
+			std::cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å —É–¥–∞–ª–µ–Ω.";
+		}
+		else
+		{
+			std::cout << "–î–µ–π—Å—Ç–≤–∏–µ –æ—Ç–º–µ–Ω–µ–Ω–æ.";
+		}
+	}
+	if (!found)
+	{
+		std::cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å —Å —Ç–∞–∫–∏–º –∏–º–µ–Ω–µ–º –Ω–µ –Ω–∞–π–¥–µ–Ω";
+	}
+}
 void showAllUsers()
 {
-    printf("\n");
-    printf("\t%-16s\t%-10s\n", "»Ïˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ", "«‡¯ËÙÓ‚‡ÌÌ˚È Ô‡ÓÎ¸");
-    printf("*************************************************************\n");
+	printf("\n");
+	printf("\t%-16s\t%-10s\n", "–ò–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è", "–ó–∞—à–∏—Ñ—Ä–æ–≤–∞–Ω–Ω—ã–π –ø–∞—Ä–æ–ª—å");
+	printf("*************************************************************\n");
 
-    printUsersData("users.txt");
+	printUsersData("users.txt");
 }
 
 void userManage() {
-    int choice = 0;
+	int choice = 0;
 
-    do {
-        
-        std::cout << "\n*************************************\n";
-        std::cout << "*        √Î‡‚ÌÓÂ ÏÂÌ˛               *\n";
-        std::cout << "*************************************\n";
-        std::cout << "* 1. ƒÓ·‡‚ËÚ¸ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ          *\n";
-        std::cout << "* 2. »ÁÏÂÌËÚ¸ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ          *\n";
-        std::cout << "* 3. ”‰‡ÎËÚ¸ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ           *\n";
-        std::cout << "* 4. œÓÍ‡Á‡Ú¸ ‚ÒÂı ÔÓÎ¸ÁÓ‚‡ÚÂÎÂÈ    *\n";
-        std::cout << "* 5. ¬˚ıÓ‰                          *\n";
-        std::cout << "*************************************\n";
+	do {
 
-        char key = _getch();
-        switch (key) {
-        case '1': choice = 1; break;
-        case '2': choice = 2; break;
-        case '3': choice = 3; break;
-        case '4': choice = 4; break;
-        case '5': choice = 5; break;
-        default:
-            std::cout << "Œ¯Ë·Í‡: ¬‚Â‰ÂÌÓ ÌÂ‚ÂÌÓÂ ÁÌ‡˜ÂÌËÂ. œÓÔÓ·ÛÈÚÂ ÒÌÓ‚‡.\n";
-            system("pause");
-            continue;
-        }
+		std::cout << "\n*************************************\n";
+		std::cout << "*        –ì–ª–∞–≤–Ω–æ–µ –º–µ–Ω—é               *\n";
+		std::cout << "*************************************\n";
+		std::cout << "* 1. –î–æ–±–∞–≤–∏—Ç—å –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è          *\n";
+		std::cout << "* 2. –ò–∑–º–µ–Ω–∏—Ç—å –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è          *\n";
+		std::cout << "* 3. –£–¥–∞–ª–∏—Ç—å –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è           *\n";
+		std::cout << "* 4. –ü–æ–∫–∞–∑–∞—Ç—å –≤—Å–µ—Ö –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–µ–π    *\n";
+		std::cout << "* 5. –°–æ—Ä—Ç–∏—Ä–æ–≤–∞—Ç—å –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–µ–π      *\n";
+		std::cout << "* 6. –í—ã—Ö–æ–¥                          *\n";
+		std::cout << "*************************************\n";
 
-        switch (choice) {
-        case 1:
-            system("cls");
-            registration();
-            system("cls");
-            break;
+		char key = _getch();
+		switch (key) {
+		case '1': choice = 1; break;
+		case '2': choice = 2; break;
+		case '3': choice = 3; break;
+		case '4': choice = 4; break;
+		case '5': choice = 5; break;
+		case '6': choice = 6; break;
+		default:
+			std::cout << "–û—à–∏–±–∫–∞: –í–≤–µ–¥–µ–Ω–æ –Ω–µ–≤–µ—Ä–Ω–æ–µ –∑–Ω–∞—á–µ–Ω–∏–µ. –ü–æ–ø—Ä–æ–±—É–π—Ç–µ —Å–Ω–æ–≤–∞.\n";
+			system("pause");
+			continue;
+		}
 
-        case 2: {
-            std::string nameToChange;
-            std::cout << "\n¬‚Â‰ËÚÂ ËÏˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ, ÍÓÚÓÓ„Ó ıÓÚËÚÂ ËÁÏÂÌËÚ¸: ";
-            std::cin >> nameToChange;
+		switch (choice) {
+		case 1:
+			system("cls");
+			registration();
+			system("cls");
+			break;
 
-            for (auto& user : users) {
-                if (user.userName == nameToChange) {
-                    int subChoice;
+		case 2: {
+			std::string nameToChange;
+			std::cout << "\n–í–≤–µ–¥–∏—Ç–µ –∏–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è, –∫–æ—Ç–æ—Ä–æ–≥–æ —Ö–æ—Ç–∏—Ç–µ –∏–∑–º–µ–Ω–∏—Ç—å: ";
+			std::cin >> nameToChange;
 
-                    do {
-                        system("cls");
-                        std::cout << "\n*********************************************************\n";
-                        std::cout << "*               ◊ÚÓ ¬˚ ıÓÚËÚÂ ËÁÏÂÌËÚ¸?                 *\n";
-                        std::cout << "*********************************************************\n";
-                        std::cout << "* 1. »Ïˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ                                   *\n";
-                        std::cout << "* 2. œ‡ÓÎ¸                                             *\n";
-                        std::cout << "* 3. –ÓÎ¸                                               *\n";
-                        std::cout << "* 4. Õ‡Á‚‡ÌËÂ ·‡Î‡ÌÒ‡                                   *\n";
-                        std::cout << "* 5.  ÓÎË˜ÂÒÚ‚Ó ‰ÂÌÂ„ Ì‡ ·‡Î‡ÌÒÂ                        *\n";
-                        std::cout << "* 6. ¬˚ıÓ‰                                              *\n";
-                        std::cout << "*********************************************************\n";
+			for (auto& user : users) {
+				if (user.userName == nameToChange) {
+					int subChoice;
 
-                        char subKey = _getch();
-                        switch (subKey) {
-                        case '1': subChoice = 1; break;
-                        case '2': subChoice = 2; break;
-                        case '3': subChoice = 3; break;
-                        case '4': subChoice = 4; break;
-                        case '5': subChoice = 5; break;
-                        case '6': subChoice = 6; break;
-                        default:
-                            std::cout << "Œ¯Ë·Í‡: ¬‚Â‰ÂÌÓ ÌÂ‚ÂÌÓÂ ÁÌ‡˜ÂÌËÂ. œÓÔÓ·ÛÈÚÂ ÒÌÓ‚‡.\n";
-                            system("pause");
-                            continue;
-                        }
+					do {
+						system("cls");
+						std::cout << "\n*********************************************************\n";
+						std::cout << "*               –ß—Ç–æ –í—ã —Ö–æ—Ç–∏—Ç–µ –∏–∑–º–µ–Ω–∏—Ç—å?                 *\n";
+						std::cout << "*********************************************************\n";
+						std::cout << "* 1. –ò–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è                                   *\n";
+						std::cout << "* 2. –ü–∞—Ä–æ–ª—å                                             *\n";
+						std::cout << "* 3. –†–æ–ª—å                                               *\n";
+						std::cout << "* 4. –ù–∞–∑–≤–∞–Ω–∏–µ –±–∞–ª–∞–Ω—Å–∞                                   *\n";
+						std::cout << "* 5. –ö–æ–ª–∏—á–µ—Å—Ç–≤–æ –¥–µ–Ω–µ–≥ –Ω–∞ –±–∞–ª–∞–Ω—Å–µ                        *\n";
+						std::cout << "* 6. –í—ã—Ö–æ–¥                                              *\n";
+						std::cout << "*********************************************************\n";
 
-                        switch (subChoice) {
-                        case 1: {
-                            system("cls");
-                            std::string newUsername;
-                            bool userNameFlag = true;
-                            while (userNameFlag) {
-                                std::cout << "\nÕÓ‚ÓÂ ËÏˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ: ";
-                                std::cin >> newUsername;
-                                userNameFlag = false;
+						char subKey = _getch();
+						switch (subKey) {
+						case '1': subChoice = 1; break;
+						case '2': subChoice = 2; break;
+						case '3': subChoice = 3; break;
+						case '4': subChoice = 4; break;
+						case '5': subChoice = 5; break;
+						case '6': subChoice = 6; break;
+						default:
+							std::cout << "–û—à–∏–±–∫–∞: –í–≤–µ–¥–µ–Ω–æ –Ω–µ–≤–µ—Ä–Ω–æ–µ –∑–Ω–∞—á–µ–Ω–∏–µ. –ü–æ–ø—Ä–æ–±—É–π—Ç–µ —Å–Ω–æ–≤–∞.\n";
+							system("pause");
+							continue;
+						}
 
-                                for (const auto& existingUser : users) {
-                                    if (existingUser.userName == newUsername) {
-                                        std::cout << "\n ›ÚÓ ËÏˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ ÛÊÂ Á‡ÌˇÚÓ.\n";
-                                        userNameFlag = true;
-                                        break;
-                                    }
-                                }
+						switch (subChoice) {
+						case 1: {
+							system("cls");
+							std::string newUsername;
+							bool userNameFlag = true;
+							while (userNameFlag) {
+								std::cout << "\n–ù–æ–≤–æ–µ –∏–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è: ";
+								std::cin >> newUsername;
+								userNameFlag = false;
 
-                                if (!userNameFlag)
-                                    user.userName = newUsername;
-                            }
-                            user.printUserToFile(user.userName + ".txt");
-                            break;
-                        }
+								for (const auto& existingUser : users) {
+									if (existingUser.userName == newUsername) {
+										std::cout << "\n –≠—Ç–æ –∏–º—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è —É–∂–µ –∑–∞–Ω—è—Ç–æ.\n";
+										userNameFlag = true;
+										break;
+									}
+								}
 
-                        case 2: {
-                            std::string newPassword;
-                            do {
-                                system("cls");
-                                std::cout << "\nÕÓ‚˚È Ô‡ÓÎ¸ (ÏËÌËÏÛÏ 5 ÒËÏ‚ÓÎÓ‚): ";
-                                std::cin >> newPassword;
-                            } while (newPassword.length() < 5);
+								if (!userNameFlag)
+									user.userName = newUsername;
+							}
+							user.printUserToFile(user.userName + ".txt");
+							break;
+						}
 
-                            user.password = newPassword;
-                            user.password = caesarCipher(user.password);
-                            user.printUserToFile(user.userName + ".txt");
-                            break;
-                        }
+						case 2: {
+							std::string newPassword;
+							do {
+								system("cls");
+								std::cout << "\n–ù–æ–≤—ã–π –ø–∞—Ä–æ–ª—å (–º–∏–Ω–∏–º—É–º 5 —Å–∏–º–≤–æ–ª–æ–≤): ";
+								std::cin >> newPassword;
+							} while (newPassword.length() < 5);
 
-                        case 3: {
-                            system("cls");
-                            char adminInput;
-                            std::cout << "\n›ÚÓÚ ÔÓÎ¸ÁÓ‚‡ÚÂÎ¸ ‡‰ÏËÌËÒÚ‡ÚÓ? (y/n): ";
-                            std::cin >> adminInput;
-                            user.isAdmin = (adminInput == 'y' || adminInput == 'Y');
-                            user.printUserToFile(user.userName + ".txt");
-                            break;
-                        }
+							user.password = newPassword;
+							user.password = caesarCipher(user.password);
+							user.printUserToFile(user.userName + ".txt");
+							break;
+						}
 
-                        case 4: {
-                            system("cls");
-                            if (user.balances.empty()) {
-                                std::cout << "\n====================================\n";
-                                std::cout << "” ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ ÌÂÚ ·‡Î‡ÌÒÓ‚!\n";
-                                std::cout << "====================================\n";
-                                system("pause");
-                                break;
-                            }
+						case 3: {
+							system("cls");
+							char adminInput;
+							std::cout << "\n–≠—Ç–æ—Ç –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å –∞–¥–º–∏–Ω–∏—Å—Ç—Ä–∞—Ç–æ—Ä? (y/n): ";
+							std::cin >> adminInput;
+							user.isAdmin = (adminInput == 'y' || adminInput == 'Y');
+							user.printUserToFile(user.userName + ".txt");
+							break;
+						}
 
-                            std::string balanceName;
-                            std::cout << "\n¬‚Â‰ËÚÂ Ì‡Á‚‡ÌËÂ ·‡Î‡ÌÒ‡ ‰Îˇ ËÁÏÂÌÂÌËÈ: ";
-                            std::cin >> balanceName;
-                            bool found = false;
+						case 4: {
+							system("cls");
+							if (user.balances.empty()) {
+								std::cout << "\n====================================\n";
+								std::cout << "–£ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–µ—Ç –±–∞–ª–∞–Ω—Å–æ–≤!\n";
+								std::cout << "====================================\n";
+								system("pause");
+								break;
+							}
 
-                            for (auto& balance : user.balances) {
-                                if (balance.name == balanceName) {
-                                    std::cout << "\nÕ‡Á‚‡ÌËÂ ÌÓ‚Ó„Ó ·‡Î‡ÌÒ‡: ";
-                                    std::cin >> balance.name;
-                                    found = true;
-                                    break;
-                                }
-                            }
+							std::string balanceName;
+							std::cout << "\n–í–≤–µ–¥–∏—Ç–µ –Ω–∞–∑–≤–∞–Ω–∏–µ –±–∞–ª–∞–Ω—Å–∞ –¥–ª—è –∏–∑–º–µ–Ω–µ–Ω–∏–π: ";
+							std::cin >> balanceName;
+							bool found = false;
 
-                                system("cls");
-                            if (!found) {
-                                std::cout << "\n=====================================\n";
-                                std::cout << "¡‡Î‡ÌÒ Ò Ú‡ÍËÏ ËÏÂÌÂÏ ÌÂ Ì‡È‰ÂÌ!\n";
-                                std::cout << "=====================================\n";
-                                system("pause");
-                            }
+							for (auto& balance : user.balances) {
+								if (balance.name == balanceName) {
+									std::cout << "\n–ù–∞–∑–≤–∞–Ω–∏–µ –Ω–æ–≤–æ–≥–æ –±–∞–ª–∞–Ω—Å–∞: ";
+									std::cin >> balance.name;
+									found = true;
+									break;
+								}
+							}
 
-                            user.printUserToFile(user.userName + ".txt");
-                            break;
-                        }
+							system("cls");
+							if (!found) {
+								std::cout << "\n=====================================\n";
+								std::cout << "–ë–∞–ª–∞–Ω—Å —Å —Ç–∞–∫–∏–º –∏–º–µ–Ω–µ–º –Ω–µ –Ω–∞–π–¥–µ–Ω!\n";
+								std::cout << "=====================================\n";
+								system("pause");
+							}
 
-                        case 5: {
-                            system("cls");  
-                            if (user.balances.empty()) {
-                                std::cout << "\n====================================\n";
-                                std::cout << "” ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ ÌÂÚ ·‡Î‡ÌÒÓ‚!\n";
-                                std::cout << "====================================\n";
-                                system("pause");
-                                system("pause");
-                                break;
-                            }
+							user.printUserToFile(user.userName + ".txt");
+							break;
+						}
 
-                            std::string balanceName;
-                            std::cout << "\n¬‚Â‰ËÚÂ Ì‡Á‚‡ÌËÂ ·‡Î‡ÌÒ‡ ‰Îˇ ËÁÏÂÌÂÌËÈ: ";
-                            std::cin >> balanceName;
+						case 5: {
+							system("cls");
+							if (user.balances.empty()) {
+								std::cout << "\n====================================\n";
+								std::cout << "–£ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–µ—Ç –±–∞–ª–∞–Ω—Å–æ–≤!\n";
+								std::cout << "====================================\n";
+								system("pause");
+								system("pause");
+								break;
+							}
 
-                            for (auto& balance : user.balances) {
-                                if (balance.name == balanceName) {
-                                    std::cout << "\n¬‚Â‰ËÚÂ ÌÓ‚ÓÂ ÍÓÎË˜ÂÒÚ‚Ó ‰ÂÌÂ„ Ì‡ ·‡Î‡ÌÒÂ: ";
-                                    std::cin >> balance.funds;
-                                    break;
-                                }
-                            }
+							std::string balanceName;
+							std::cout << "\n–í–≤–µ–¥–∏—Ç–µ –Ω–∞–∑–≤–∞–Ω–∏–µ –±–∞–ª–∞–Ω—Å–∞ –¥–ª—è –∏–∑–º–µ–Ω–µ–Ω–∏–π: ";
+							std::cin >> balanceName;
 
-                            user.printUserToFile(user.userName + ".txt");
-                            break;
-                        }
+							for (auto& balance : user.balances) {
+								if (balance.name == balanceName) {
+									std::cout << "\n–í–≤–µ–¥–∏—Ç–µ –Ω–æ–≤–æ–µ –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ –¥–µ–Ω–µ–≥ –Ω–∞ –±–∞–ª–∞–Ω—Å–µ: ";
+									std::cin >> balance.funds;
+									break;
+								}
+							}
 
-                        case 6:
-                            std::cout << "¬ÓÁ‚‡˘ÂÌËÂ ‚ „Î‡‚ÌÓÂ ÏÂÌ˛...\n";
-                            system("pause");
-                            system("cls");
-                            break;
-                        }
+							user.printUserToFile(user.userName + ".txt");
+							break;
+						}
+						case 7:
+							std::cout << "–í–æ–∑–≤—Ä–∞—â–µ–Ω–∏–µ –≤ –≥–ª–∞–≤–Ω–æ–µ –º–µ–Ω—é...\n";
+							system("pause");
+							system("cls");
+							break;
+						}
 
-                    } while (subChoice != 6);
+					} while (subChoice != 6);
 
-                    break;
-                }
-            }
-            break;
-        }
+					break;
+				}
+			}
+			break;
+		}
 
-        case 3: {
-            system("cls");
-            std::string nameToDelete;
-            std::cout << "\n¬‚Â‰ËÚÂ ËÏˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ, ÍÓÚÓÓ„Ó ıÓÚËÚÂ Û‰‡ÎËÚ¸: ";
-            std::cin >> nameToDelete;
-            bool found = false;
-            for (auto user : users)
-            {
-                if (user.userName == nameToDelete) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                std::cout << "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ ÌÂ Ì‡È‰ÂÌ.\n";
-                
-            }
-            else
-            {
-                std::string choiceToDelete;
-                std::cout << "\n¬˚ Û‚ÂÂÌ˚, ˜ÚÓ ıÓÚËÚÂ Û‰‡ÎËÚ¸ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ " << nameToDelete << "? (ƒ‡/ÕÂÚ): ";
-                std::cin >> choiceToDelete;
-                auto it = std::find_if(users.begin(), users.end(), [&](const User& user) {
-                    return user.userName == nameToDelete;
-                    });
+		case 3:
+		{
+			system("cls");
+			deleteUser();
+			break;
+		}
+		case 4:
+			system("cls");
+			showAllUsers();
+			break;
+		case 5:
+			system("cls");
+			sortUsers();
+			break;
+		case 6:
+			std::cout << "–í—ã—Ö–æ–¥ –∏–∑ –ø–∞–Ω–µ–ª–∏ –∞–¥–º–∏–Ω–∏—Å—Ç—Ä–∞—Ç–æ—Ä–∞...\n";
+			system("pause");
+			system("cls");
+			break;
+		}
 
-                if (it != users.end()) {
-                    users.erase(it);
-                    std::cout << "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ Û‰‡ÎÂÌ.\n";
-                    saveUsersData(users, "users.txt");
-                }
-                else {
-                    std::cout << "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ ÌÂ Ì‡È‰ÂÌ.\n";
-                }
-            }
-            break;
-        }
-
-        case 4:
-            system("cls");
-            showAllUsers();
-            break;
-        case 5:
-            std::cout << "¬˚ıÓ‰ ËÁ Ô‡ÌÂÎË ‡‰ÏËÌËÒÚ‡ÚÓ‡...\n";
-            system("pause");
-            system("cls");
-            break;
-        }
-
-    } while (choice != 5);
+	} while (choice != 6);
 }
 
-void sorrtUsers()
-{
-    
-}

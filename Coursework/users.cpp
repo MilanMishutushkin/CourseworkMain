@@ -7,7 +7,6 @@
 #include <sstream>
 #include <conio.h>
 
-
 void User::printUserToFile(const std::string& filename) {
 	std::ofstream file(filename);
 	if (!file.is_open()) {
@@ -43,10 +42,21 @@ void User::readUserFromFile(const std::string& filename) {
 	file.close();
 }
 
+int User::allFunds()
+{
+	int totalFunds = 0;
+	for (const auto& balance : balances)
+	{
+		totalFunds += balance.funds;
+	}
+	return totalFunds;
+}
+
 std::vector<User> users;
 int userIndex = -1;
 
 void loadUsers() {
+	users.clear();
 	std::ifstream file("user_list.txt");
 	if (!file.is_open()) {
 		std::cout << "\n=============================================================\n";
@@ -94,7 +104,6 @@ void saveUsersData(const std::vector<User>& users, const std::string& filename)
 
 	file.close();
 }
-
 void printUsersData(const std::string& filename)
 {
 	std::ifstream file(filename);
@@ -116,6 +125,8 @@ void printUsersData(const std::string& filename)
 	}
 }
 
+
+
 std::string caesarCipher(const std::string& text) {
 	std::string encryptedText;
 	for (char c : text) {
@@ -123,6 +134,7 @@ std::string caesarCipher(const std::string& text) {
 	}
 	return encryptedText;
 }
+
 void transactions()
 {
 	std::cout << "\nВведите название баланса-отправителя:";
@@ -205,8 +217,8 @@ void sortBalances() {
 		switch (choice) {
 		case 1: {
 			Balance temp;
-			for (size_t i = 0; i < users[userIndex].balances.size(); i++) {
-				for (size_t j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
+			for (int i = 0; i < users[userIndex].balances.size(); i++) {
+				for (int j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
 					if (users[userIndex].balances[j].name > users[userIndex].balances[j + 1].name) {
 						std::swap(users[userIndex].balances[j], users[userIndex].balances[j + 1]);
 					}
@@ -216,8 +228,8 @@ void sortBalances() {
 		}
 		case 2: {
 			Balance temp;
-			for (size_t i = 0; i < users[userIndex].balances.size(); i++) {
-				for (size_t j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
+			for (int i = 0; i < users[userIndex].balances.size(); i++) {
+				for (int j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
 					if (users[userIndex].balances[j].number > users[userIndex].balances[j + 1].number) {
 						std::swap(users[userIndex].balances[j], users[userIndex].balances[j + 1]);
 					}
@@ -227,8 +239,8 @@ void sortBalances() {
 		}
 		case 3: {
 			Balance temp;
-			for (size_t i = 0; i < users[userIndex].balances.size(); i++) {
-				for (size_t j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
+			for (int i = 0; i < users[userIndex].balances.size(); i++) {
+				for (int j = 0; j < users[userIndex].balances.size() - i - 1; j++) {
 					if (users[userIndex].balances[j].funds > users[userIndex].balances[j + 1].funds) {
 						std::swap(users[userIndex].balances[j], users[userIndex].balances[j + 1]);
 					}

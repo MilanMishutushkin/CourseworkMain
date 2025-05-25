@@ -19,6 +19,7 @@ struct User {
 
 	void printUserToFile(const std::string& filename);
 	void readUserFromFile(const std::string& filename);
+	int allFunds();
 };
 
 extern std::vector<User> users;
