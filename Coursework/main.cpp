@@ -7,7 +7,7 @@ int main() {
 	SetConsoleOutputCP(1251);
 	loadUsers();
 
-	const char* entranceFilename = "entrance.txt";
+	//const char* entranceFilename = "entrance.txt";
 	
 	runMenu();
 }

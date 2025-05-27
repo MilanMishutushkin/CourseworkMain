@@ -9,21 +9,6 @@
 
 struct Admin : User {};
 
-
-
-
-
-
-//ТЫ ОТСОРТИРОВАЛ ТОЛЬКО ВЕКТОР, НАДО ЕЩЕ ЕГО В ПРАВИЛЬНОЙ ФОРМЕ НАПИСАТЬ В ФАЙЛ!!!!!!!!!!!!!
-
-
-
-
-
-
-
-
-
 void sortUsers()
 {
 	int choice = 0;
@@ -52,7 +37,7 @@ void sortUsers()
 		}
 
 		switch (choice) {
-		case 1: 
+		case 1:
 			for (int i = 0; i < users.size(); i++) {
 				for (int j = 0; j < users.size() - i - 1; j++) {
 					if (users[j].userName > users[j + 1].userName) {
@@ -63,7 +48,7 @@ void sortUsers()
 			std::cout << "Пользователи отсортированы по имени.\n";
 			break;
 
-		case 2: 
+		case 2:
 			for (int i = 0; i < users.size(); i++) {
 				for (int j = 0; j < users.size() - i - 1; j++) {
 					if (users[j].isAdmin < users[j + 1].isAdmin) {
@@ -74,7 +59,7 @@ void sortUsers()
 			std::cout << "Пользователи отсортированы по роли.\n";
 			break;
 
-		case 3: 
+		case 3:
 			for (int i = 0; i < users.size(); i++) {
 				for (int j = 0; j < users.size() - i - 1; j++) {
 					if (users[j].allFunds() > users[j + 1].allFunds()) {
@@ -91,10 +76,21 @@ void sortUsers()
 		}
 
 		if (choice != 4) {
+			std::ofstream file("users.txt", std::ios::trunc);
+			if (!file) {
+				std::cout << "Ошибка: Не удалось открыть файл!\n";
+			}
+			else {
+				for (const auto& user : users) {
+					file << user.userName << "\t" << user.password << "\n";
+				}
+				file.close();
+			}
 			system("pause");
 		}
 
 	} while (choice != 4);
+	
 }void deleteUser()
 {
 	std::cout << "\nВведите имя пользователя на удаление:";
