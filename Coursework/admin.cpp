@@ -105,7 +105,17 @@ void sortUsers()
 			break;
 		}
 	}
-	if (found)
+	bool isNotYou = true;
+	if (nameToDelete == users[userIndex].userName)
+	{
+		system("cls");
+		std::cout << "\n=====================================";
+		std::cout << "\n Вы не можете удалить самого себя!";
+		std::cout << "\n=====================================";
+		isNotYou = false;
+	}
+
+	if (found&&isNotYou)
 	{
 		std::string confirm;
 		std::cout << "\nВы действительно хотите удалить пользователя " << nameToDelete << " ?";

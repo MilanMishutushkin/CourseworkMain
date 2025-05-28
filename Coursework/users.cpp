@@ -206,6 +206,7 @@ void sortBalances() {
 		case '1': choice = 1; break;
 		case '2': choice = 2; break;
 		case '3': choice = 3; break;
+		case '4': choice = 4; break;
 		default:
 			std::cout << "\n====================================================\n";
 			std::cout << " Ошибка: Введено неверное значение. Попробуйте снова!";
